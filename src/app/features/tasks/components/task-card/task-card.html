@@ -1,0 +1,56 @@
+<!--
+  CONCEPT: Dumb Component Template
+  This template only uses @Input data and emits @Output events.
+  It has zero knowledge of services, routing, or business logic.
+-->
+<mat-card class="task-card" [class]="getStatusClass()">
+  <mat-card-header>
+    <mat-card-title class="task-title">
+      {{ task.title }}
+    </mat-card-title>
+    <mat-card-subtitle>
+      <!-- Built-in `date` pipe with a format string -->
+      Created {{ task.createdAt | date:'mediumDate' }}
+      <span *ngIf="task.assignee"> · Assigned to {{ task.assignee }}</span>
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <p class="task-description">{{ task.description }}</p>
+
+    <div class="task-meta-row">
+      <!-- Custom pipe: priorityLabel -->
+      <mat-chip class="priority-chip">{{ task.priority | priorityLabel:'short' }}</mat-chip>
+
+      <!-- Due date with conditional styling -->
+      <span class="due-date" *ngIf="task.dueDate">
+        <mat-icon class="small-icon">event</mat-icon>
+        Due: {{ task.dueDate | date:'mediumDate' }}
+      </span>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <!--
+      CONCEPT: Event Binding — (click)
+      Each button emits an @Output event when clicked.
+      The parent (smart) component handles the actual logic.
+    -->
+    <button mat-button color="primary"
+            *ngIf="task.status !== 'done'"
+            (click)="onStatusChange(task.status === 'todo' ? 'in-progress' : 'done')"
+            matTooltip="Move to next status">
+      <mat-icon>{{ task.status === 'todo' ? 'play_arrow' : 'check' }}</mat-icon>
+      {{ task.status === 'todo' ? 'Start' : 'Complete' }}
+    </button>
+
+    <button mat-button (click)="onEdit()" matTooltip="Edit task">
+      <mat-icon>edit</mat-icon>
+      Edit
+    </button>
+
+    <button mat-button color="warn" (click)="onDelete()" matTooltip="Delete task">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </mat-card-actions>
+</mat-card>

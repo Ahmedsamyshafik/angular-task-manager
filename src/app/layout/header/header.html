@@ -1,0 +1,76 @@
+<!--
+  CONCEPT: Data Binding Types (all four shown here)
+  ===================================================
+  1. INTERPOLATION {{ }}: One-way, component → template.
+     Evaluates an expression and inserts the result as text.
+     Example: {{ currentUser?.username }}
+
+  2. PROPERTY BINDING [ ]: One-way, component → template.
+     Binds a component property to an element/directive property.
+     Example: [matBadge]="3"
+
+  3. EVENT BINDING ( ): One-way, template → component.
+     Listens for DOM events and calls component methods.
+     Example: (click)="logout()"
+
+  4. TWO-WAY BINDING [( )]: Both directions simultaneously.
+     Combines property binding + event binding. Used with ngModel.
+     Example: [(ngModel)]="searchText"
+     (See task-quick-add component for a two-way binding example)
+-->
+
+<mat-toolbar color="primary" class="header-toolbar">
+  <!-- App title with routerLink — clicking navigates to dashboard -->
+  <a routerLink="/dashboard" class="app-title">
+    <mat-icon>assignment</mat-icon>
+    <span>Angular Task Manager</span>
+  </a>
+
+  <!-- Spacer pushes nav items to the right -->
+  <span class="spacer"></span>
+
+  <!--
+    CONCEPT: Structural Directive — *ngIf
+    *ngIf conditionally adds/removes elements from the DOM.
+    Unlike [hidden], *ngIf actually DESTROYS the element and its
+    component (triggering ngOnDestroy), which saves resources.
+    Use *ngIf for elements that toggle infrequently.
+    Use [hidden] for elements that toggle frequently (avoids re-creation cost).
+  -->
+  <ng-container *ngIf="isAuthenticated">
+    <button mat-button routerLink="/dashboard" routerLinkActive="active-link">
+      <mat-icon>dashboard</mat-icon>
+      Dashboard
+    </button>
+    <button mat-button routerLink="/tasks" routerLinkActive="active-link">
+      <mat-icon>list</mat-icon>
+      Tasks
+    </button>
+
+    <!-- User menu -->
+    <button mat-button [matMenuTriggerFor]="userMenu">
+      <mat-icon>account_circle</mat-icon>
+      <!-- INTERPOLATION: Display the username from component property -->
+      {{ currentUser?.username }}
+    </button>
+
+    <mat-menu #userMenu="matMenu">
+      <div class="user-menu-header" mat-menu-item disabled>
+        <strong>{{ currentUser?.email }}</strong><br>
+        <small>Role: {{ currentUser?.role }}</small>
+      </div>
+      <mat-divider></mat-divider>
+      <!-- EVENT BINDING: (click) calls the logout() method -->
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        Logout
+      </button>
+    </mat-menu>
+  </ng-container>
+
+  <!-- Show login button when not authenticated -->
+  <button mat-button *ngIf="!isAuthenticated" routerLink="/auth/login">
+    <mat-icon>login</mat-icon>
+    Login
+  </button>
+</mat-toolbar>

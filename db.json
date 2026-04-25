@@ -1,0 +1,84 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Learn Angular Components",
+      "description": "Study component lifecycle hooks, data binding, and the difference between smart and dumb components. Practice creating reusable components.",
+      "priority": "high",
+      "status": "done",
+      "dueDate": "2025-04-20",
+      "createdAt": "2025-04-01",
+      "assignee": "Ahmed"
+    },
+    {
+      "id": 2,
+      "title": "Practice Reactive Forms",
+      "description": "Build complex forms using FormGroup, FormControl, and Validators. Learn the difference between reactive and template-driven forms.",
+      "priority": "high",
+      "status": "in-progress",
+      "dueDate": "2025-04-25",
+      "createdAt": "2025-04-05",
+      "assignee": "Ahmed"
+    },
+    {
+      "id": 3,
+      "title": "Study Angular Routing",
+      "description": "Understand lazy loading, route guards, route parameters, and child routes. Implement navigation in a real project.",
+      "priority": "medium",
+      "status": "in-progress",
+      "dueDate": "2025-04-28",
+      "createdAt": "2025-04-08",
+      "assignee": "Ahmed"
+    },
+    {
+      "id": 4,
+      "title": "Explore RxJS Operators",
+      "description": "Learn map, switchMap, mergeMap, catchError, tap, and other essential operators. Practice with real HTTP calls.",
+      "priority": "high",
+      "status": "todo",
+      "dueDate": "2025-05-01",
+      "createdAt": "2025-04-10",
+      "assignee": "Ahmed"
+    },
+    {
+      "id": 5,
+      "title": "Build Custom Directives",
+      "description": "Create attribute and structural directives. Understand how to manipulate the DOM safely with ElementRef and Renderer2.",
+      "priority": "medium",
+      "status": "todo",
+      "dueDate": "2025-05-05",
+      "createdAt": "2025-04-12",
+      "assignee": ""
+    },
+    {
+      "id": 6,
+      "title": "Implement Authentication Flow",
+      "description": "Build login/logout functionality with guards, interceptors, and token management. Understand the auth flow end-to-end.",
+      "priority": "high",
+      "status": "done",
+      "dueDate": "2025-04-15",
+      "createdAt": "2025-04-02",
+      "assignee": "Ahmed"
+    },
+    {
+      "id": 7,
+      "title": "Write Unit Tests",
+      "description": "Learn Angular testing utilities: TestBed, ComponentFixture, and dependency injection in tests. Write tests for services and components.",
+      "priority": "low",
+      "status": "todo",
+      "dueDate": "2025-05-10",
+      "createdAt": "2025-04-14",
+      "assignee": ""
+    },
+    {
+      "id": 8,
+      "title": "Optimize Performance",
+      "description": "Study change detection strategies (Default vs OnPush), trackBy in ngFor, and lazy loading. Profile the app with Angular DevTools.",
+      "priority": "medium",
+      "status": "todo",
+      "dueDate": "2025-05-15",
+      "createdAt": "2025-04-16",
+      "assignee": "Ahmed"
+    }
+  ]
+}

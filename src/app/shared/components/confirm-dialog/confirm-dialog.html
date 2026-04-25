@@ -1,0 +1,17 @@
+<!--
+  CONCEPT: Angular Material Dialog
+  This template uses Angular Material's dialog components.
+  mat-dialog-title, mat-dialog-content, and mat-dialog-actions provide
+  consistent dialog layout and styling.
+-->
+<h2 mat-dialog-title>{{ data.title }}</h2>
+
+<mat-dialog-content>
+  <p>{{ data.message }}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <!-- mat-dialog-close can also be used as a directive to auto-close -->
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="warn" (click)="onConfirm()">Confirm</button>
+</mat-dialog-actions>

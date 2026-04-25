@@ -1,0 +1,27 @@
+.quick-add-container {
+  margin-bottom: 24px;
+}
+
+.quick-add-form {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+.quick-input {
+  flex: 1;
+}
+
+.priority-select {
+  min-width: 140px;
+}
+
+.add-button {
+  margin-top: 4px;
+  height: 56px;
+}
