@@ -1,0 +1,117 @@
+<!--
+  CONCEPT: Smart Component Template
+  The DashboardPage (smart) passes computed data to StatCard (dumb)
+  via @Input property bindings. The dumb component has no idea where
+  the data comes from — it just displays what it receives.
+-->
+
+<div class="dashboard-container">
+  <h1 class="page-title">
+    Welcome back, {{ currentUser?.username || 'User' }}!
+  </h1>
+  <p class="page-subtitle">Here's an overview of your tasks</p>
+
+  <!--
+    CONCEPT: Passing Data to Child (Dumb) Components
+    [title], [value], [icon], [color] are @Input properties on StatCard.
+    We bind our computed getters to them.
+  -->
+  <div class="stats-grid">
+    <app-stat-card
+      [title]="'Total Tasks'"
+      [value]="totalTasks"
+      [icon]="'assignment'"
+      [color]="'#3f51b5'">
+    </app-stat-card>
+
+    <app-stat-card
+      [title]="'To Do'"
+      [value]="todoCount"
+      [icon]="'radio_button_unchecked'"
+      [color]="'#ff9800'">
+    </app-stat-card>
+
+    <app-stat-card
+      [title]="'In Progress'"
+      [value]="inProgressCount"
+      [icon]="'autorenew'"
+      [color]="'#2196f3'">
+    </app-stat-card>
+
+    <app-stat-card
+      [title]="'Completed'"
+      [value]="doneCount"
+      [icon]="'check_circle'"
+      [color]="'#4caf50'">
+    </app-stat-card>
+  </div>
+
+  <!-- Recent Tasks Section -->
+  <mat-card class="recent-tasks-card">
+    <mat-card-header>
+      <mat-card-title>Recent Tasks</mat-card-title>
+      <mat-card-subtitle>Last 5 tasks created</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <!--
+        CONCEPT: *ngIf with else — Conditional Rendering
+        *ngIf="condition; else templateRef" shows the element if condition
+        is true, otherwise renders the ng-template referenced by #templateRef.
+      -->
+      <div *ngIf="recentTasks.length > 0; else noTasks">
+        <!--
+          CONCEPT: *ngFor — Iterating Over Lists
+          *ngFor="let task of recentTasks" renders this element once for each item.
+
+          PERFORMANCE TIP: trackBy
+          By default, *ngFor identifies items by object reference.
+          When the array is replaced (e.g., after an API call), Angular
+          destroys and recreates ALL DOM elements — even unchanged ones.
+
+          trackBy tells Angular to identify items by a stable key (like id).
+          If an item's id hasn't changed, Angular reuses its DOM element.
+          This dramatically improves performance for large or frequently
+          updated lists.
+        -->
+        <div *ngFor="let task of recentTasks; trackBy: trackByTaskId"
+             class="task-row"
+             [routerLink]="['/tasks', task.id]"
+             appHighlight="#e8eaf6">
+          <div class="task-info">
+            <span class="task-title">{{ task.title }}</span>
+            <span class="task-meta">
+              <!--
+                CONCEPT: Built-in Pipes
+                The `date` pipe formats a date string.
+                Angular includes many built-in pipes: date, uppercase,
+                lowercase, currency, percent, json, async, slice, etc.
+              -->
+              {{ task.createdAt | date:'mediumDate' }}
+            </span>
+          </div>
+          <div class="task-badges">
+            <!--
+              CONCEPT: Custom Pipe Usage
+              Our custom `priorityLabel` pipe transforms 'high' → '🔴 High Priority'
+            -->
+            <span class="priority-badge">{{ task.priority | priorityLabel:'short' }}</span>
+            <mat-chip [class]="'status-' + task.status">
+              {{ task.status }}
+            </mat-chip>
+          </div>
+        </div>
+      </div>
+
+      <!-- Template shown when there are no tasks -->
+      <ng-template #noTasks>
+        <div class="no-tasks">
+          <mat-icon>inbox</mat-icon>
+          <p>No tasks yet. Create your first task!</p>
+          <button mat-raised-button color="primary" routerLink="/tasks">
+            Go to Tasks
+          </button>
+        </div>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</div>

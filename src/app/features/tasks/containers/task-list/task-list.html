@@ -1,0 +1,102 @@
+<!--
+  CONCEPT: Smart Component Template — Orchestrating Dumb Components
+  ===================================================================
+  This template connects dumb components together:
+  - Passes data DOWN via [propertyBinding]
+  - Listens for events UP via (eventBinding)
+  - Manages UI state (showForm, filters, loading)
+-->
+
+<div class="task-list-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Tasks</h1>
+      <p class="page-subtitle">Manage your tasks efficiently</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="onShowCreateForm()"
+            *ngIf="!showForm">
+      <mat-icon>add</mat-icon>
+      New Task
+    </button>
+  </div>
+
+  <!--
+    CONCEPT: *ngIf to Toggle Sections
+    The form only exists in the DOM when showForm is true.
+    When hidden, Angular destroys the component entirely (not just hidden via CSS).
+  -->
+  <app-task-form
+    *ngIf="showForm"
+    [task]="editingTask"
+    (save)="onSaveTask($event)"
+    (cancel)="onCancelForm()">
+  </app-task-form>
+
+  <!-- Quick Add (Template-Driven Form) — always visible -->
+  <app-task-quick-add
+    *ngIf="!showForm"
+    (quickAdd)="onQuickAdd($event)">
+  </app-task-quick-add>
+
+  <!-- Filters -->
+  <div class="filters-row">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Status</mat-label>
+      <mat-select [value]="statusFilter" (selectionChange)="onStatusFilterChange($event.value)">
+        <mat-option value="all">All Statuses</mat-option>
+        <mat-option value="todo">To Do</mat-option>
+        <mat-option value="in-progress">In Progress</mat-option>
+        <mat-option value="done">Done</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Priority</mat-label>
+      <mat-select [value]="priorityFilter" (selectionChange)="onPriorityFilterChange($event.value)">
+        <mat-option value="all">All Priorities</mat-option>
+        <mat-option value="high">High</mat-option>
+        <mat-option value="medium">Medium</mat-option>
+        <mat-option value="low">Low</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <span class="task-count">
+      Showing {{ filteredTasks.length }} of {{ tasks.length }} tasks
+    </span>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading tasks...</p>
+  </div>
+
+  <!-- Task Cards List -->
+  <div *ngIf="!isLoading">
+    <!--
+      CONCEPT: *ngFor with trackBy
+      trackBy: trackByTaskId — Angular uses the task's ID to track items
+      instead of object references. This optimizes re-rendering.
+
+      CONCEPT: Connecting Smart ↔ Dumb Components
+      [task]="task"                    — @Input: pass data DOWN
+      (edit)="onEditTask($event)"      — @Output: handle event UP
+      (delete)="onDeleteTask($event)"  — @Output: handle event UP
+      $event is the value emitted by the EventEmitter.
+    -->
+    <app-task-card
+      *ngFor="let task of filteredTasks; trackBy: trackByTaskId"
+      [task]="task"
+      (edit)="onEditTask($event)"
+      (delete)="onDeleteTask($event)"
+      (statusChange)="onStatusChange($event)">
+    </app-task-card>
+
+    <!-- Empty state -->
+    <div *ngIf="filteredTasks.length === 0 && !isLoading" class="empty-state">
+      <mat-icon>search_off</mat-icon>
+      <p *ngIf="tasks.length === 0">No tasks yet. Create your first task above!</p>
+      <p *ngIf="tasks.length > 0">No tasks match the current filters.</p>
+    </div>
+  </div>
+</div>

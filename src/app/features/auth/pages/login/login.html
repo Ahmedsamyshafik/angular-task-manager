@@ -1,0 +1,91 @@
+<!--
+  CONCEPT: Reactive Forms in Templates
+  ======================================
+  - [formGroup]="loginForm": Binds this <form> to the FormGroup in the component.
+  - formControlName="username": Binds this <input> to the 'username' FormControl.
+  - (ngSubmit)="onSubmit()": Calls onSubmit() when the form is submitted.
+    ngSubmit (vs submit) prevents the default browser form submission.
+-->
+
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar class="login-icon">lock_open</mat-icon>
+      <mat-card-title>Welcome Back</mat-card-title>
+      <mat-card-subtitle>Sign in to manage your tasks</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+
+        <!-- Username field with validation feedback -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username</mat-label>
+          <input matInput
+                 formControlName="username"
+                 placeholder="Enter your username"
+                 autocomplete="username">
+          <mat-icon matPrefix>person</mat-icon>
+
+          <!--
+            CONCEPT: Form Validation Error Messages
+            f['username'].errors — an object containing validation errors.
+            f['username'].touched — true after the user has blurred the field.
+            We only show errors AFTER the user has interacted with the field
+            to avoid showing errors before they've had a chance to type.
+          -->
+          <mat-error *ngIf="f['username'].errors?.['required']">
+            Username is required
+          </mat-error>
+          <mat-error *ngIf="f['username'].errors?.['minlength']">
+            Username must be at least 3 characters
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Password field with toggle visibility -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput
+                 formControlName="password"
+                 [type]="hidePassword ? 'password' : 'text'"
+                 placeholder="Enter your password"
+                 autocomplete="current-password">
+          <mat-icon matPrefix>lock</mat-icon>
+          <!--
+            CONCEPT: Property Binding + Event Binding Together
+            [type]="hidePassword ? 'password' : 'text'" — PROPERTY BINDING
+            (click)="hidePassword = !hidePassword"      — EVENT BINDING
+            Together they toggle password visibility.
+          -->
+          <button mat-icon-button matSuffix type="button"
+                  (click)="hidePassword = !hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="f['password'].errors?.['required']">
+            Password is required
+          </mat-error>
+          <mat-error *ngIf="f['password'].errors?.['minlength']">
+            Password must be at least 3 characters
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Submit button with loading state -->
+        <button mat-raised-button
+                color="primary"
+                type="submit"
+                class="full-width login-button"
+                [disabled]="isLoading">
+          <mat-spinner *ngIf="isLoading" diameter="20" class="inline-spinner"></mat-spinner>
+          {{ isLoading ? 'Signing in...' : 'Sign In' }}
+        </button>
+      </form>
+
+      <!-- Demo credentials hint -->
+      <div class="demo-credentials">
+        <p><strong>Demo Credentials:</strong></p>
+        <p>Admin: <code>admin</code> / <code>admin123</code></p>
+        <p>User: <code>user</code> / <code>user123</code></p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

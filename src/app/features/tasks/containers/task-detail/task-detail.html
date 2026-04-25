@@ -1,0 +1,73 @@
+<div class="task-detail-container">
+  <!-- Back button -->
+  <button mat-button (click)="goBack()" class="back-button">
+    <mat-icon>arrow_back</mat-icon>
+    Back to Tasks
+  </button>
+
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading task details...</p>
+  </div>
+
+  <!-- Edit mode: show the form -->
+  <app-task-form
+    *ngIf="isEditing && task"
+    [task]="task"
+    (save)="onSave($event)"
+    (cancel)="onCancelEdit()">
+  </app-task-form>
+
+  <!-- View mode: show task details -->
+  <mat-card *ngIf="!isLoading && task && !isEditing" class="detail-card">
+    <mat-card-header>
+      <mat-card-title>{{ task.title }}</mat-card-title>
+      <mat-card-subtitle>
+        Created {{ task.createdAt | date:'fullDate' }}
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="detail-section">
+        <h3>Description</h3>
+        <p>{{ task.description }}</p>
+      </div>
+
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="detail-label">Priority</span>
+          <span>{{ task.priority | priorityLabel }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Status</span>
+          <mat-chip [class]="'status-' + task.status">{{ task.status }}</mat-chip>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Due Date</span>
+          <span>{{ task.dueDate | date:'fullDate' }}</span>
+        </div>
+        <div class="detail-item" *ngIf="task.assignee">
+          <span class="detail-label">Assignee</span>
+          <span>{{ task.assignee }}</span>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-raised-button color="primary" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+        Edit Task
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <!-- Not found state -->
+  <div *ngIf="!isLoading && !task" class="not-found">
+    <mat-icon>error_outline</mat-icon>
+    <p>Task not found</p>
+    <button mat-raised-button color="primary" (click)="goBack()">
+      Back to Tasks
+    </button>
+  </div>
+</div>

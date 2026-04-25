@@ -1,0 +1,15 @@
+<!--
+  CONCEPT: Property Binding Examples
+  [style.background-color] binds a CSS property to a component property.
+  This is more dynamic than static CSS — the color changes based on @Input.
+-->
+<mat-card class="stat-card" [style.border-left-color]="color">
+  <div class="stat-content">
+    <div class="stat-info">
+      <!-- INTERPOLATION: {{ title }} displays the title input value -->
+      <span class="stat-title">{{ title }}</span>
+      <span class="stat-value">{{ value }}</span>
+    </div>
+    <mat-icon class="stat-icon" [style.color]="color">{{ icon }}</mat-icon>
+  </div>
+</mat-card>

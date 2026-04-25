@@ -1,0 +1,62 @@
+<!--
+  CONCEPT: Template-Driven Form
+  ================================
+  - #quickForm="ngForm": Creates a template reference variable bound to
+    the NgForm directive. Gives us access to form.valid, form.dirty, etc.
+  - (ngSubmit): Fires when the form is submitted (via button or Enter key).
+  - [(ngModel)]: Two-way data binding — syncs the input value with the
+    component property in both directions.
+  - name="title": REQUIRED when using ngModel inside a form — Angular
+    uses this to register the control with the NgForm.
+  - #titleInput="ngModel": Template reference to the ngModel directive
+    on this specific input — gives access to its validation state.
+  - required, minlength: Built-in validation directives for template-driven forms.
+-->
+
+<div class="quick-add-container">
+  <form #quickForm="ngForm" (ngSubmit)="onSubmit()" class="quick-add-form">
+    <mat-form-field appearance="outline" class="quick-input">
+      <mat-label>Quick Add Task</mat-label>
+      <!--
+        CONCEPT: Two-Way Binding [(ngModel)]
+        When the user types, `title` updates in the component.
+        If we set `title = 'something'` in code, the input updates.
+      -->
+      <input matInput
+             [(ngModel)]="title"
+             name="title"
+             #titleInput="ngModel"
+             required
+             minlength="3"
+             placeholder="Type a task title and press Enter...">
+      <!--
+        Template-driven validation errors:
+        We use the template reference #titleInput to check validation state.
+      -->
+      <mat-error *ngIf="titleInput.errors?.['required']">Title is required</mat-error>
+      <mat-error *ngIf="titleInput.errors?.['minlength']">Min 3 characters</mat-error>
+    </mat-form-field>
+
+    <!--
+      CONCEPT: Two-Way Binding on mat-select
+      [(ngModel)]="priority" binds the select value to our component property.
+    -->
+    <mat-form-field appearance="outline" class="priority-select">
+      <mat-label>Priority</mat-label>
+      <mat-select [(ngModel)]="priority" name="priority">
+        <mat-option value="low">🟢 Low</mat-option>
+        <mat-option value="medium">🟡 Medium</mat-option>
+        <mat-option value="high">🔴 High</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button
+            color="accent"
+            type="submit"
+            [disabled]="quickForm.invalid"
+            class="add-button">
+      <mat-icon>add</mat-icon>
+      Add
+    </button>
+  </form>
+</div>
