@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Task } from '../../../../core/models/task.model';
@@ -51,9 +51,17 @@ export class DashboardPage implements OnInit, OnDestroy {
       .slice(0, 5);
   }
 
+  /**
+   * CONCEPT: ChangeDetectorRef
+   * Angular's change detection may not automatically pick up async
+   * state updates from BehaviorSubjects in all cases. Injecting
+   * ChangeDetectorRef lets us manually notify Angular when data
+   * has changed so the template re-renders with the latest values.
+   */
   constructor(
     private authService: AuthService,
-    private taskStateService: TaskStateService
+    private taskStateService: TaskStateService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -65,7 +73,10 @@ export class DashboardPage implements OnInit, OnDestroy {
     this.taskStateService.loadTasks();
     this.taskStateService.tasks$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(tasks => this.tasks = tasks);
+      .subscribe(tasks => {
+        this.tasks = tasks;
+        this.cdr.detectChanges();
+      });
   }
 
   trackByTaskId(index: number, task: Task): number {

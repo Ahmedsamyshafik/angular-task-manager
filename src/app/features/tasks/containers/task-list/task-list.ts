@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -45,7 +45,8 @@ export class TaskList implements OnInit, OnDestroy {
 
   constructor(
     private taskStateService: TaskStateService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -58,11 +59,15 @@ export class TaskList implements OnInit, OnDestroy {
       .subscribe(tasks => {
         this.tasks = tasks;
         this.applyFilters();
+        this.cdr.detectChanges();
       });
 
     this.taskStateService.loading$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(loading => this.isLoading = loading);
+      .subscribe(loading => {
+        this.isLoading = loading;
+        this.cdr.detectChanges();
+      });
   }
 
   /** Filter tasks based on selected status and priority */

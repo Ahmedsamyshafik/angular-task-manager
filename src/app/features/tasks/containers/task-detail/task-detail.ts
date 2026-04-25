@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
@@ -46,7 +46,8 @@ export class TaskDetail implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private taskStateService: TaskStateService
+    private taskStateService: TaskStateService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -69,11 +70,15 @@ export class TaskDetail implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(task => {
       this.task = task;
+      this.cdr.detectChanges();
     });
 
     this.taskStateService.loading$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(loading => this.isLoading = loading);
+      .subscribe(loading => {
+        this.isLoading = loading;
+        this.cdr.detectChanges();
+      });
   }
 
   onEdit(): void {
